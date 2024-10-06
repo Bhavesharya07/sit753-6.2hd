@@ -2,51 +2,36 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout SCM') {
             steps {
-                // Clone the Git repository
-                git branch: 'main', url: 'https://github.com/Bhavesharya07/sit753-6.2hd'
+                git credentialsId: 'gmailcredentials', url: 'https://github.com/Bhavesharya07/sit753-6.2hd'
             }
         }
-        
         stage('Build') {
             steps {
-                script {
-                    echo 'Building the application...'
-                    // Add any other build commands here
-                }
+                echo 'Building the application...'
+                // Add your build commands here, e.g., compiling code, building images, etc.
             }
         }
-        
         stage('Code Analysis') {
             steps {
-                script {
-                    echo 'Running Code Analysis...'
-                    // Add any code analysis tools here, if available
-                }
+                echo 'Running Code Analysis...'
+                // Add your code analysis commands here
             }
         }
-        
         stage('Test') {
             steps {
-                script {
-                    echo 'Running tests...'
-                    // Execute the test script
-                    bat 'python -m unittest discover -s . -p "test_todo.py"'
-                }
+                echo 'Running tests...'
+                bat 'C:\\Python39\\python.exe -m unittest discover -s . -p "test_todo.py"'
             }
         }
     }
-    
     post {
         always {
             echo 'Pipeline completed.'
         }
         failure {
             echo 'Pipeline failed. Please check the logs for errors.'
-        }
-        success {
-            echo 'Pipeline succeeded.'
         }
     }
 }
