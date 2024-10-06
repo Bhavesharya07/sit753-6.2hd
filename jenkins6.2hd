@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Clone your Git repository
+                // Clone the Git repository
                 git branch: 'main', url: 'https://github.com/your-repo/python_todo_app.git'
             }
         }
@@ -14,6 +14,32 @@ pipeline {
                 script {
                     // If there's any environment setup or dependency installation, add it here.
                     echo 'Building the application...'
+                    
+                    // Install Python dependencies, if required (using pip and a requirements.txt file)
+                    sh '''
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install -r requirements.txt
+                    '''
+                }
+            }
+        }
+        
+        stage('Code Analysis') {
+            steps {
+                script {
+                    // Run the linter (flake8) for code analysis
+                    echo 'Running Code Analysis...'
+                    
+                    sh '''
+                    source venv/bin/activate
+                    pip install flake8  # Install flake8 if not in requirements
+                    flake8 --max-line-length=88 --statistics --count
+                    '''
+                    
+                    // You can also add pylint or other analysis tools similarly:
+                    // pip install pylint
+                    // pylint todo_app.py
                 }
             }
         }
@@ -21,23 +47,13 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run the Python app to test
+                    // Run the Python application for testing
                     echo 'Running tests...'
+                    
                     sh '''
+                    source venv/bin/activate
                     python3 todo_app.py < test_input.txt > test_output.txt
                     '''
-                    // Use an external file (test_input.txt) for automated input if required.
-                }
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                script {
-                    echo 'Deploying the application...'
-                    // This could be deployment to a production server, container, etc.
-                    // Add your deployment logic here. For example:
-                    // scp or rsync commands to deploy to a remote server.
                 }
             }
         }
