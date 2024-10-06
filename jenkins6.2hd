@@ -12,13 +12,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Use the full path to Python and pip for Windows
                     echo 'Building the application...'
                     
-                    // Adjust the Python path based on your installation
+                    // Create a virtual environment and install dependencies
                     bat '''
                     C:\\Python39\\python.exe -m venv venv
-                    venv\\Scripts\\activate
+                    call venv\\Scripts\\activate
                     C:\\Python39\\python.exe -m pip install -r requirements.txt
                     '''
                 }
@@ -28,11 +27,11 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 script {
-                    // Run the linter (flake8) for code analysis
                     echo 'Running Code Analysis...'
                     
+                    // Install flake8 if not already installed and run it
                     bat '''
-                    venv\\Scripts\\activate
+                    call venv\\Scripts\\activate
                     C:\\Python39\\python.exe -m pip install flake8
                     flake8 --max-line-length=88 --statistics --count
                     '''
@@ -43,11 +42,11 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run the tests by executing `todo_app.py`
                     echo 'Running tests...'
                     
+                    // Run the tests by executing `todo_app.py`
                     bat '''
-                    venv\\Scripts\\activate
+                    call venv\\Scripts\\activate
                     C:\\Python39\\python.exe todo_app.py < test_input.txt > test_output.txt
                     '''
                 }
@@ -59,6 +58,14 @@ pipeline {
         always {
             // This runs whether the pipeline passes or fails.
             echo 'Pipeline completed.'
+        }
+        failure {
+            // Optionally, you can add notifications or error logging here
+            echo 'Pipeline failed. Please check the logs for errors.'
+        }
+        success {
+            // Optional: you can log a success message
+            echo 'Pipeline succeeded.'
         }
     }
 }
