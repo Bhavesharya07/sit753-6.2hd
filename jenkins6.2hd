@@ -12,13 +12,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Set up the virtual environment and install Python dependencies on Windows
+                    // Use the full path to Python and pip for Windows
                     echo 'Building the application...'
                     
+                    // Adjust the Python path based on your installation
                     bat '''
-                    python -m venv venv
+                    C:\\Python39\\python.exe -m venv venv
                     venv\\Scripts\\activate
-                    pip install -r requirements.txt
+                    C:\\Python39\\python.exe -m pip install -r requirements.txt
                     '''
                 }
             }
@@ -27,12 +28,12 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 script {
-                    // Run the linter (flake8) for code analysis on Windows
+                    // Run the linter (flake8) for code analysis
                     echo 'Running Code Analysis...'
                     
                     bat '''
                     venv\\Scripts\\activate
-                    pip install flake8  # Install flake8 if not in requirements
+                    C:\\Python39\\python.exe -m pip install flake8
                     flake8 --max-line-length=88 --statistics --count
                     '''
                 }
@@ -42,12 +43,12 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run the tests by executing `todo_app.py` with test input
+                    // Run the tests by executing `todo_app.py`
                     echo 'Running tests...'
                     
                     bat '''
                     venv\\Scripts\\activate
-                    python todo_app.py < test_input.txt > test_output.txt
+                    C:\\Python39\\python.exe todo_app.py < test_input.txt > test_output.txt
                     '''
                 }
             }
