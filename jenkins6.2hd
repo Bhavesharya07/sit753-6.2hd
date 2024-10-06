@@ -12,10 +12,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // If there's any environment setup or dependency installation, add it here.
+                    // Set up the virtual environment and install Python dependencies on Windows
                     echo 'Building the application...'
                     
-                    // Install Python dependencies using pip on Windows
                     bat '''
                     python -m venv venv
                     venv\\Scripts\\activate
@@ -36,10 +35,6 @@ pipeline {
                     pip install flake8  # Install flake8 if not in requirements
                     flake8 --max-line-length=88 --statistics --count
                     '''
-                    
-                    // You can also add pylint or other analysis tools similarly:
-                    // pip install pylint
-                    // pylint todo_app.py
                 }
             }
         }
@@ -47,7 +42,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run the Python application for testing on Windows
+                    // Run the tests by executing `todo_app.py` with test input
                     echo 'Running tests...'
                     
                     bat '''
