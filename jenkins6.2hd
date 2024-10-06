@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone your Git repository
+                git branch: 'main', url: 'https://github.com/your-repo/python_todo_app.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    // If there's any environment setup or dependency installation, add it here.
+                    echo 'Building the application...'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                script {
+                    // Run the Python app to test
+                    echo 'Running tests...'
+                    sh '''
+                    python3 todo_app.py < test_input.txt > test_output.txt
+                    '''
+                    // Use an external file (test_input.txt) for automated input if required.
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    echo 'Deploying the application...'
+                    // This could be deployment to a production server, container, etc.
+                    // Add your deployment logic here. For example:
+                    // scp or rsync commands to deploy to a remote server.
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // This runs whether the pipeline passes or fails.
+            echo 'Pipeline completed.'
+        }
+    }
+}
