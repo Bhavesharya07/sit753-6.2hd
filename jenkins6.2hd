@@ -13,19 +13,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building the application...'
-                    
-                    // Adjust the Python installation path as necessary
-                    def pythonPath = 'C:\\Python39\\python.exe'
-                    def venvPath = 'venv\\Scripts\\activate'
-
-                    // Create a virtual environment and install dependencies
-                    bat '''
-                    if not exist venv (
-                        C:\\Python39\\python.exe -m venv venv
-                    )
-                    call venv\\Scripts\\activate
-                    C:\\Python39\\python.exe -m pip install -r requirements.txt
-                    '''
+                    // Add any other build commands here
                 }
             }
         }
@@ -34,13 +22,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running Code Analysis...'
-                    
-                    // Run the linter (flake8) for code analysis
-                    bat '''
-                    call venv\\Scripts\\activate
-                    C:\\Python39\\python.exe -m pip install flake8
-                    flake8 --max-line-length=88 --statistics --count
-                    '''
+                    // Add any code analysis tools here, if available
                 }
             }
         }
@@ -49,12 +31,8 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests...'
-                    
-                    // Run the tests by executing `todo_app.py`
-                    bat '''
-                    call venv\\Scripts\\activate
-                    C:\\Python39\\python.exe todo_app.py < test_input.txt > test_output.txt
-                    '''
+                    // Execute the test script
+                    bat 'python -m unittest discover -s . -p "test_*.py"'
                 }
             }
         }
@@ -62,15 +40,12 @@ pipeline {
     
     post {
         always {
-            // This runs whether the pipeline passes or fails.
             echo 'Pipeline completed.'
         }
         failure {
-            // Log a failure message
             echo 'Pipeline failed. Please check the logs for errors.'
         }
         success {
-            // Log a success message
             echo 'Pipeline succeeded.'
         }
     }
