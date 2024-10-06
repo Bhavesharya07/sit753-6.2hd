@@ -15,10 +15,10 @@ pipeline {
                     // If there's any environment setup or dependency installation, add it here.
                     echo 'Building the application...'
                     
-                    // Install Python dependencies, if required (using pip and a requirements.txt file)
-                    sh '''
-                    python3 -m venv venv
-                    source venv/bin/activate
+                    // Install Python dependencies using pip on Windows
+                    bat '''
+                    python -m venv venv
+                    venv\\Scripts\\activate
                     pip install -r requirements.txt
                     '''
                 }
@@ -28,11 +28,11 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 script {
-                    // Run the linter (flake8) for code analysis
+                    // Run the linter (flake8) for code analysis on Windows
                     echo 'Running Code Analysis...'
                     
-                    sh '''
-                    source venv/bin/activate
+                    bat '''
+                    venv\\Scripts\\activate
                     pip install flake8  # Install flake8 if not in requirements
                     flake8 --max-line-length=88 --statistics --count
                     '''
@@ -47,12 +47,12 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run the Python application for testing
+                    // Run the Python application for testing on Windows
                     echo 'Running tests...'
                     
-                    sh '''
-                    source venv/bin/activate
-                    python3 todo_app.py < test_input.txt > test_output.txt
+                    bat '''
+                    venv\\Scripts\\activate
+                    python todo_app.py < test_input.txt > test_output.txt
                     '''
                 }
             }
