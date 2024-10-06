@@ -14,9 +14,15 @@ pipeline {
                 script {
                     echo 'Building the application...'
                     
+                    // Adjust the Python installation path as necessary
+                    def pythonPath = 'C:\\Python39\\python.exe'
+                    def venvPath = 'venv\\Scripts\\activate'
+
                     // Create a virtual environment and install dependencies
                     bat '''
-                    C:\\Python39\\python.exe -m venv venv
+                    if not exist venv (
+                        C:\\Python39\\python.exe -m venv venv
+                    )
                     call venv\\Scripts\\activate
                     C:\\Python39\\python.exe -m pip install -r requirements.txt
                     '''
@@ -29,7 +35,7 @@ pipeline {
                 script {
                     echo 'Running Code Analysis...'
                     
-                    // Install flake8 if not already installed and run it
+                    // Run the linter (flake8) for code analysis
                     bat '''
                     call venv\\Scripts\\activate
                     C:\\Python39\\python.exe -m pip install flake8
@@ -60,11 +66,11 @@ pipeline {
             echo 'Pipeline completed.'
         }
         failure {
-            // Optionally, you can add notifications or error logging here
+            // Log a failure message
             echo 'Pipeline failed. Please check the logs for errors.'
         }
         success {
-            // Optional: you can log a success message
+            // Log a success message
             echo 'Pipeline succeeded.'
         }
     }
